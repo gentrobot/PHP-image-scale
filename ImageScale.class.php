@@ -1,6 +1,23 @@
 <?php
 
-Class ImageScale{
+/**
+ * Image Scale Class
+ * @author     Mohsin
+ * @version    1.0
+ * @date       09/12/2012
+ *
+ * Use		: To create a scaled version of an image, keeping the aspect ratio intact,
+ *					to fit within a frame of pre defined dimensions.
+ *
+ * Example: To scale an image of any dimension to fit within a container of 700X524 
+ *					and with output image quality 80
+ *
+ * $scaleObject = new ImageScale('abc.jpg',700,524);
+ * $scaleObject->scaleImage();
+ * $scaleObject->save('abc_new.jpg',80);
+ */
+
+class ImageScale{
 
 	private $image;
 	private $width;
@@ -9,19 +26,26 @@ Class ImageScale{
 	private $frameHeight;
 	private $scaledImage;
 
+  /* constructor function, takes in the filename and container dimensions where the output image needs to be placed */
 	public function __construct($filename,$frameWidth,$frameHeight)
 	{
 		$this->image = $this->getFile($filename);
+
+    //get image dimensions
 		$this->width = imagesx($this->image);
 		$this->height = imagesy($this->image);
+         
 		$this->frameWidth = $frameWidth;
 		$this->frameHeight = $frameHeight;
 		
 	}
 
+  /* method that opens up the file and creates an image resource */
 	private function getFile($file)	
 	{
+		//get image file's extension
 		$ext = strtolower(strrchr($file, '.'));
+
 		switch($ext)
 		{
 			case '.jpg':
@@ -40,11 +64,13 @@ Class ImageScale{
 		}
 		return $img;
 	}
-	
+
+	/*method to scale the image */	
 	public function scaleImage()
 	{
+		//get the dimensions to which the source image shall be scaled	
 		$scaledDimensions = $this->getDimensions();
-
+		
 		$scaledWidth = $scaledDimensions['scaledWidth'];
 		$scaledHeight = $scaledDimensions['scaledHeight'];
 
@@ -53,9 +79,11 @@ Class ImageScale{
 		imagecopyresampled($this->scaledImage, $this->image, 0, 0, 0, 0, $scaledWidth, $scaledHeight, $this->width, $this->height);
 	}
 
+	/* Method to get the dimensions to which the source image shall be scaled	*/
 	private function getDimensions()
 	{
-		if($this->width > $this->height)
+		//scale the longer side first and the shorter side as per the ratio
+    if($this->width > $this->height)
 		{
 			$newWidth = $this->frameWidth;
 			$newHeight = $this->frameWidth/$this->width*$this->height;
@@ -66,9 +94,11 @@ Class ImageScale{
 		return array('scaledWidth' => $newWidth , 'scaledHeight' => $newHeight);
 	}
 
+	/*Method to save the scaled image resource */
 	public function save($finalDestination, $quality=80)
 	{
- 		$ext = strtolower(strrchr($finalDestination, '.'));
+		//get the extension of the file to be saved to determine the format of the output image 		
+		$ext = strtolower(strrchr($finalDestination, '.'));
 
 		switch($ext)
 		{
