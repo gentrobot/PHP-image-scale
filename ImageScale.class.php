@@ -3,8 +3,8 @@
 /**
 	* Image Scale Class
 	* @author     Mohsin
-	* @version    1.0
-	* @date       09/12/2012
+	* @version    1.1
+	* @date       09/13/2012
 	*
 	* Use : To create a scaled version of an image, keeping the aspect ratio intact,
 	* to fit within a frame of pre defined dimensions.
