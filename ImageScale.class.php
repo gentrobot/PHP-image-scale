@@ -28,7 +28,7 @@ class ImageScale{
 	/* constructor function, takes in the filename and container dimensions where the output image needs to be placed */
 	public function __construct($filename,$frameWidth,$frameHeight)
 	{
-		$this->image = $this->getFile($filename);
+		$this->image = $this->getImageFile($filename);
 
 		//get image dimensions
 		$this->width = imagesx($this->image);
@@ -40,21 +40,21 @@ class ImageScale{
 	}
 
 	/* method that opens up the file and creates an image resource */
-	private function getFile($file)	
+	private function getImageFile($file)	
 	{
-		//get image file's extension
-		$ext = strtolower(strrchr($file, '.'));
 
-		switch($ext)
+		//get image filetype
+		$type =  exif_imagetype($file);
+
+		switch($type)
 		{
-			case '.jpg':
-			case '.jpeg':
+			case 2:
 				$img = imagecreatefromjpeg($file);
 				break;
-			case '.gif':
+			case 1:
 				$img = imagecreatefromgif($file);
 				break;
-			case '.png':
+			case 3:
 				$img = imagecreatefrompng($file);
 				break;
 			default:
@@ -94,9 +94,9 @@ class ImageScale{
 	/*Method to save the scaled image resource */
 	public function save($finalDestination, $quality=80)
 	{
-		//get the extension of the file to be saved to determine the format of the output image 		
-		$ext = strtolower(strrchr($finalDestination, '.'));
-		switch($ext)
+		//get the filetype of the file to be saved to determine the format of the output image 		
+		$type = strtolower(strrchr($finalDestination, '.'));
+		switch($type)
 		{
 			case '.jpg':
 			case '.jpeg':
